@@ -60,6 +60,37 @@ def save_data():
     pd.DataFrame(data_records).to_csv(file_path_exp, index=False)
     print(f"Data opgeslagen in {file_path_exp}")
 
+# Moeilijkheidsrating
+def ask_question(question_text, options):
+    question = visual.TextStim(win, text=question_text, color="white", height=35, wrapWidth=800, pos=(0, 200),
+                               font="Arial")
+    slider = visual.Slider(win, ticks=options, labels=[str(option) for option in options],
+                           granularity=1, style=["rating"], size=(600, 40), pos=(0, 0), color="white",
+                           labelColor="white", font="Arial")
+    instruction = visual.TextStim(win, text="Druk op [F] om verder te gaan", color="white", height=25, pos=(0, -200))
+
+    response = None
+    while response is None:
+        question.draw()
+        slider.draw()
+        instruction.draw()
+        win.flip()
+
+        keys = event.getKeys(keyList=["f", "escape"])
+        if "f" in keys and slider.getRating() is not None:
+            response = slider.getRating()
+        elif "escape" in keys:
+            core.quit()
+
+    data_record = pd.DataFrame([{
+        "Participant": expInfo["Participant"],
+        "Session": expInfo["Sessie"],
+        "DifficultyRating": response
+    }])
+
+    data_record.to_csv(file_path_mc, index=False)
+    print(f"Data opgeslagen in {file_path_mc}")
+
 def run_trials(trial_data, block_number):
     """Voert de trials uit voor een blok en registreert de response en reactietijden.
     De stimulus wordt 250ms getoond, gevolgd door een ISI van 200-1000ms.
@@ -140,35 +171,13 @@ def run_trials(trial_data, block_number):
             core.quit()
 
 
-question = visual.TextStim(win, text="Hoe moeilijk vond je deze taak?", color="white", height=35, wrapWidth=800, pos=(0, 200), font="Arial")
-slider = visual.Slider(win, ticks=[1, 2, 3, 4, 5], labels=["Heel makkelijk", "Makkelijk", "Gemiddeld", "Moeilijk", "Heel moeilijk"],
-                        granularity=1, style=["rating"], size=(600, 40), pos=(0, 0), color="white", labelColor="white", font="Arial")
-instruction = visual.TextStim(win, text="Druk op [F] om verder te gaan", color="white", height=25, pos=(0, -200))
 
-# Vraag en slider tonen
-response = None
-while response is None:
-    question.draw()
-    slider.draw()
-    instruction.draw()
-    win.flip()
+#question = visual.TextStim(win, text="Hoe moeilijk vond je deze taak?", color="white", height=35, wrapWidth=800, pos=(0, 200), font="Arial")
+#slider = visual.Slider(win, ticks=[1, 2, 3, 4, 5], labels=["Heel makkelijk", "Makkelijk", "Gemiddeld", "Moeilijk", "Heel moeilijk"],
+#                        granularity=1, style=["rating"], size=(600, 40), pos=(0, 0), color="white", labelColor="white", font="Arial")
 
-    keys = event.getKeys(keyList=["f", "escape"])
-    if "f" in keys and slider.getRating() is not None:
-        response = slider.getRating()
-    elif "escape" in keys:
-        core.quit()
 
-# Data opslaan
-data_record = pd.DataFrame([{
-    "Participant": expInfo["Participant"],
-    "Session": expInfo["Sessie"],
-    "DifficultyRating": response
-}])
-
-data_record.to_csv(file_path_mc, index=False)
-print(f"Data opgeslagen in {file_path_mc}")
-
+ask_question("Hoe moeilijk vond je deze taak?", [1,2,3,4,5,6])
 # Experiment flow met instructies en trials
 show_instructions("Welkom bij het experiment. \n\n Druk op [F] om verder te gaan.")
 show_instructions(
