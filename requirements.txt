@@ -1,0 +1,5 @@
+psychopy==2024.2.5
+pandas==2.2.3
+numpy==1.26.4
+wxPython==4.2.1
+
