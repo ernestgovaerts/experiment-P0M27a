@@ -65,9 +65,10 @@ def save_data():
 
 # Manipulatiecheck vragen
 def ask_question(question_text, labels, ID):
+    ticks = list(range(1, len(labels) + 1))  # Maak ticks op basis van het aantal labels
     question = visual.TextStim(win, text=question_text, color="white", height=35, wrapWidth=800, pos=(0, 200),
                                font="Arial")
-    slider = visual.Slider(win, ticks=[1,2,3,4,5], labels=labels,
+    slider = visual.Slider(win, ticks=ticks, labels=labels,
                            granularity=1, style=["rating"], size=(600, 40), pos=(0, 0), color="white",
                            labelColor="white", font="Arial")
     instruction = visual.TextStim(win, text="Druk op [F] om verder te gaan", color="white", height=25, pos=(0, -200), font="Arial")
@@ -171,7 +172,7 @@ def run_trials(trial_data, block_number):
 
 # Experiment flow met instructies en trials
 show_instructions(
-    "Welkom!.\n\n"
+    "Welkom!\n\n"
     "In dit experiment zal je blije en verdrietige gezichten te zien krijgen.\n"
     "Op het volgende scherm zie je in welke conditie je zit. "
     "Daar wordt aangegeven welke gezichtsuitdrukking de go-stimulus is (waarop je moet reageren) en "
@@ -206,8 +207,8 @@ else:
     ask_question("Hoe vaak heb je op de spatiebalk gedrukt bij een verdrietige gezichtsuitdrukking?", ["Bijna nooit of nooit", "Zelden", "Soms", "Vaak", "Bijna altijd of altijd"], ID="mc2")
 
 # Pauze van 30 seconden tussen de twee delen van het experiment
-show_instructions(
-    "Einde van het eerste deel. \n U krijgt nu een pauze van 30 seconden, waarna de instructies voor het tweede deel zullen volgen.")
+visual.TextStim(win, text="Einde van het eerste deel. \n U krijgt nu een pauze van 30 seconden, waarna de instructies voor het tweede deel zullen volgen.", color="white", wrapWidth=1000, height=25).draw()
+win.flip()
 core.wait(30)
 
 # Omkeren van de go/no-go toewijzing voor het tweede deel
@@ -234,7 +235,7 @@ else:
     ask_question("Hoe vaak heb je op de spatiebalk gedrukt bij een verdrietige gezichtsuitdrukking?", ["Bijna nooit of nooit", "Zelden", "Soms", "Vaak", "Bijna altijd of altijd"], ID="mc2")
 
 # Derde en vierde manipulatiecheck
-ask_question("De reactietijd die ik had om te reageren op de stimulus was:", ["Altijd hetzelfde", "Meestal hetzelfde, met enkele uitzonderingen", "Sterk variërend tussen trials"], ID="mc3")
+ask_question("De tijd die ik had om te reageren op de stimulus was:", ["Altijd hetzelfde", "Meestal hetzelfde, met enkele uitzonderingen", "Sterk variërend tussen trials"], ID="mc3")
 ask_question("Het verschil tussen de gezichtsuitdrukkingen was duidelijk.", ["Niet akkoord", "Neutraal", "Akkoord"], ID="mc4")
 
 
